@@ -1,5 +1,5 @@
 name: "iOS: Deploy Build"
-run-name: ${{ github.event.inputs.release == 'true' && 'Release' || 'Build' }} for ${{ github.event.inputs.ipa_url }}
+run-name: "Valenced iOS build"
 
 on:
   workflow_dispatch:
@@ -154,8 +154,11 @@ jobs:
           merge-multiple: true
 
       - name: Download Discord IPA
+        env:
+          IPA_URL: ${{ inputs.ipa_url }}
         run: |
-          curl -L -o discord.ipa ${{ github.event.inputs.ipa_url || inputs.ipa_url }}
+          set -euo pipefail
+          curl --fail --location --silent --show-error --output discord.ipa "$IPA_URL"
 
       - name: Clone OpenInDiscord
         uses: actions/checkout@v4
